@@ -11,23 +11,26 @@
 
 //==============================================================================
 AudioPlayerAudioProcessorEditor::AudioPlayerAudioProcessorEditor (AudioPlayerAudioProcessor& p)
-    : AudioProcessorEditor(&p), audioProcessor(p), openButton("Open"), playButton("Play"), stopButton("Stop")
+    : AudioProcessorEditor(&p), audioProcessor(p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
 
-    //set buttons functionality with lambda functions 
-    openButton.onClick = [this] {; };
-    addAndMakeVisible(openButton);
-
-    playButton.onClick = [this] {; };
-    addAndMakeVisible(playButton);
+    addAndMakeVisible(&openButton);
+    openButton.setButtonText("Open");
+    openButton.onClick = [this] { openButtonClicked(); };
+    
+    addAndMakeVisible(&playButton);
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::green);
-
-    stopButton.onClick = [this] {; };
-    addAndMakeVisible(stopButton);
+    playButton.setButtonText("Play");
+    playButton.onClick = [this] { playButtonClicked(); };
+ 
+    addAndMakeVisible(&stopButton);
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
+    stopButton.setButtonText("Stop");
+    stopButton.onClick = [this] { stopButtonClicked(); };
+
 }
 
 AudioPlayerAudioProcessorEditor::~AudioPlayerAudioProcessorEditor()
@@ -42,7 +45,18 @@ void AudioPlayerAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (juce::FontOptions (15.0f));
-   // g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+   
+
+}
+
+void AudioPlayerAudioProcessorEditor::openButtonClicked() {
+    audioProcessor.openFile();
+}
+void AudioPlayerAudioProcessorEditor::playButtonClicked() {
+    audioProcessor.playFile();
+}
+void AudioPlayerAudioProcessorEditor::stopButtonClicked() {
+    audioProcessor.stopFile();
 }
 
 void AudioPlayerAudioProcessorEditor::resized()

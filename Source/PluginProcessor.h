@@ -53,7 +53,31 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    //enums for different states the audio file is in
+    enum TransportState {
+        Stopped,
+        Starting,
+        Playing,
+        Stopping
+    };
+
+    //Manage audio file functions
+    void openFile();
+    void stopFile();
+    void playFile();
+
 private:
+
+    //Audio file manager objects
+    juce::AudioFormatManager formatManager;
+    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
+    juce::AudioTransportSource transportSource;
+    TransportState state;
+
+    
+
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPlayerAudioProcessor)
 };

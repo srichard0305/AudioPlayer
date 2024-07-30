@@ -22,6 +22,8 @@ AudioPlayerAudioProcessor::AudioPlayerAudioProcessor()
                        )
 #endif
 {
+    
+
 }
 
 AudioPlayerAudioProcessor::~AudioPlayerAudioProcessor()
@@ -182,6 +184,22 @@ void AudioPlayerAudioProcessor::setStateInformation (const void* data, int sizeI
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
 }
+
+void AudioPlayerAudioProcessor::openFile() {
+
+
+}
+
+void AudioPlayerAudioProcessor::playFile() {
+
+
+}
+
+void AudioPlayerAudioProcessor::stopFile() {
+
+
+}
+
 
 //==============================================================================
 // This creates new instances of the plugin..
