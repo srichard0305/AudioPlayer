@@ -25,12 +25,13 @@ AudioPlayerAudioProcessorEditor::AudioPlayerAudioProcessorEditor (AudioPlayerAud
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::green);
     playButton.setButtonText("Play");
     playButton.onClick = [this] { playButtonClicked(); };
+    playButton.setEnabled(false);
  
     addAndMakeVisible(&stopButton);
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
     stopButton.setButtonText("Stop");
     stopButton.onClick = [this] { stopButtonClicked(); };
-
+    stopButton.setEnabled(false);
 }
 
 AudioPlayerAudioProcessorEditor::~AudioPlayerAudioProcessorEditor()
@@ -51,12 +52,17 @@ void AudioPlayerAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPlayerAudioProcessorEditor::openButtonClicked() {
     audioProcessor.openFile();
+    playButton.setEnabled(true);
 }
 void AudioPlayerAudioProcessorEditor::playButtonClicked() {
     audioProcessor.playFile();
+    playButton.setEnabled(false);
+    stopButton.setEnabled(true);
 }
 void AudioPlayerAudioProcessorEditor::stopButtonClicked() {
     audioProcessor.stopFile();
+    stopButton.setEnabled(false);
+    playButton.setEnabled(true);
 }
 
 void AudioPlayerAudioProcessorEditor::resized()

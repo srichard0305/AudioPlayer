@@ -54,14 +54,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    //enums for different states the audio file is in
-    enum TransportState {
-        Stopped,
-        Starting,
-        Playing,
-        Stopping
-    };
-
+  
     //Manage audio file functions
     void openFile();
     void stopFile();
@@ -73,9 +66,6 @@ private:
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
-    TransportState state;
-
-    
 
 
     //==============================================================================

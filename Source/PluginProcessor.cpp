@@ -22,7 +22,7 @@ AudioPlayerAudioProcessor::AudioPlayerAudioProcessor()
                        )
 #endif
 {
-    
+    formatManager.registerBasicFormats();
 
 }
 
@@ -97,6 +97,7 @@ void AudioPlayerAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    transportSource.prepareToPlay(samplesPerBlock, sampleRate);
 }
 
 void AudioPlayerAudioProcessor::releaseResources()
@@ -146,18 +147,16 @@ void AudioPlayerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    
+    if (readerSource.get() == nullptr)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
+        
+        return;
     }
+
+    juce::AudioSourceChannelInfo sourceInfo(&buffer, 0, buffer.getNumSamples());
+    transportSource.getNextAudioBlock(sourceInfo);
+
 }
 
 //==============================================================================
@@ -187,6 +186,23 @@ void AudioPlayerAudioProcessor::setStateInformation (const void* data, int sizeI
 
 void AudioPlayerAudioProcessor::openFile() {
 
+    juce::FileChooser chooser("Choose a wav file to open...", 
+                                juce::File::getSpecialLocation(juce::File::userDesktopDirectory),
+                                        "*.wav", "*.aiff");
+    
+    if (chooser.browseForFileToOpen()) {
+
+        juce::File file;
+
+        file = chooser.getResult();
+
+        juce::AudioFormatReader* reader = formatManager.createReaderFor(file);
+
+        std::unique_ptr<juce::AudioFormatReaderSource> tempSource(new juce::AudioFormatReaderSource(reader, true));
+
+        //when open file dialoge box is open wont stop playback 
+        readerSource.reset(tempSource.release());
+    }
 
 }
 
