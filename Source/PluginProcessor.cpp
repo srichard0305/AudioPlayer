@@ -186,9 +186,9 @@ void AudioPlayerAudioProcessor::setStateInformation (const void* data, int sizeI
 
 void AudioPlayerAudioProcessor::openFile() {
 
-    juce::FileChooser chooser("Choose a wav file to open...", 
+    juce::FileChooser chooser("Choose a wav or mp3 file to open...", 
                                 juce::File::getSpecialLocation(juce::File::userDesktopDirectory),
-                                        "*.wav", "*.aiff");
+                                        "*.wav; *.mp3");
     
     if (chooser.browseForFileToOpen()) {
 
@@ -200,6 +200,8 @@ void AudioPlayerAudioProcessor::openFile() {
 
         std::unique_ptr<juce::AudioFormatReaderSource> tempSource(new juce::AudioFormatReaderSource(reader, true));
 
+        transportSource.setSource(tempSource.get());
+
         //when open file dialoge box is open wont stop playback 
         readerSource.reset(tempSource.release());
     }
@@ -207,13 +209,15 @@ void AudioPlayerAudioProcessor::openFile() {
 }
 
 void AudioPlayerAudioProcessor::playFile() {
-
+    
+    transportSource.start();
 
 }
 
 void AudioPlayerAudioProcessor::stopFile() {
 
-
+    transportSource.stop();
+    transportSource.setPosition(0.0);
 }
 
 
