@@ -19,7 +19,8 @@ AudioPlayerAudioProcessor::AudioPlayerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+                        apvts(*this, nullptr, "Parameters", createParameterLayout())
 #endif
 {
     formatManager.registerBasicFormats();
@@ -157,6 +158,21 @@ void AudioPlayerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     juce::AudioSourceChannelInfo sourceInfo(&buffer, 0, buffer.getNumSamples());
     transportSource.getNextAudioBlock(sourceInfo);
 
+    auto gainValue = apvts.getRawParameterValue("Gain Slider");
+
+   for (int channel = 0; channel < totalNumInputChannels; channel++) {
+
+       //get the buffer write pointer for each channel
+       float* channelData = buffer.getWritePointer(channel);
+
+       for (int sample = 0; sample < buffer.getNumSamples(); sample++) {
+
+           //write to the channel each sample multipled by the gain value of the slider
+           channelData[sample] = buffer.getSample(channel, sample) * gainValue->load();
+
+       }
+   }
+
 }
 
 //==============================================================================
@@ -182,6 +198,17 @@ void AudioPlayerAudioProcessor::setStateInformation (const void* data, int sizeI
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout
+AudioPlayerAudioProcessor::createParameterLayout() {
+  
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>("Gain Slider",
+        "Gain Slider", 0.0f, 1.0f, 0.5f));
+
+    return layout;
 }
 
 void AudioPlayerAudioProcessor::openFile() {

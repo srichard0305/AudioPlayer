@@ -24,7 +24,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
-   ;
+   
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -35,9 +35,15 @@ private:
     juce::TextButton playButton;
     juce::TextButton stopButton;
 
+    juce::Slider gainSlider; 
+
+    //attachment must be declared after slider object 
+    juce::AudioProcessorValueTreeState::SliderAttachment sliderAttachment;
+
     void openButtonClicked();
     void playButtonClicked();
     void stopButtonClicked();
+
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPlayerAudioProcessorEditor)
 

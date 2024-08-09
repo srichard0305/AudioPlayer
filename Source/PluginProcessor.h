@@ -60,6 +60,8 @@ public:
     void stopFile();
     void playFile();
 
+    juce::AudioProcessorValueTreeState apvts;
+
 private:
 
     //Audio file manager objects
@@ -67,6 +69,7 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
 
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPlayerAudioProcessor)
